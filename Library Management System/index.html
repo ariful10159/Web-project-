@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Sign In</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="form-buttons">
+                <button id="signUpBtn" class="active">Sign Up</button>
+                <button id="signInBtn">Sign In</button>
+            </div>
+
+            <!-- Sign Up Form -->
+            <form id="signUpForm" action="signup.php" method="POST" class="form">
+                <h2>Create Account</h2>
+                <div class="input-group">
+                    <label for="userType">Account Type:</label>
+                    <select id="userType" name="userType" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <!-- Sign In Form -->
+            <form id="signInForm" action="signin.php" method="POST" class="form hidden">
+                <h2>Welcome Back</h2>
+                <div class="input-group">
+                    <label for="userType">Account Type:</label>
+                    <select id="userType" name="userType" required>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const signUpBtn = document.getElementById('signUpBtn');
+            const signInBtn = document.getElementById('signInBtn');
+            const signUpForm = document.getElementById('signUpForm');
+            const signInForm = document.getElementById('signInForm');
+
+            signUpBtn.addEventListener('click', () => {
+                signUpBtn.classList.add('active');
+                signInBtn.classList.remove('active');
+                signUpForm.classList.remove('hidden');
+                signInForm.classList.add('hidden');
+            });
+
+            signInBtn.addEventListener('click', () => {
+                signInBtn.classList.add('active');
+                signUpBtn.classList.remove('active');
+                signInForm.classList.remove('hidden');
+                signUpForm.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
