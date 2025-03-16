@@ -1,0 +1,221 @@
+/* stylesadmin.css */
+:root {
+    --primary: #6366f1;
+    --secondary: #8b5cf6;
+    --glass: rgba(255, 255, 255, 0.08);
+    --background: #0f172a;
+    --text: #f1f5f9;
+    --hover-bg: rgba(99, 102, 241, 0.1);
+  }
+  
+  /* Base Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(45deg, #0f172a, #1e293b);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Glassmorphic Sidebar */
+  .sidebar {
+    width: 280px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    padding: 2rem;
+    position: fixed;
+    height: 100%;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+  }
+  
+  .sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    position: relative;
+    padding-left: 10px;
+  }
+  
+  .sidebar h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 40px;
+    height: 3px;
+    background: var(--primary);
+  }
+  
+  /* Modern Menu Design */
+  .admin-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .menu-section {
+    background: var(--glass);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .menu-section:hover {
+    transform: translateX(8px);
+  }
+  
+  .menu-section > span {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    padding: 0.5rem;
+  }
+  
+  .menu-section ul {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .menu-section a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .menu-section a::before {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--hover-bg), transparent);
+    transition: 0.4s;
+  }
+  
+  .menu-section a:hover {
+    background: var(--hover-bg);
+  }
+  
+  .menu-section a:hover::before {
+    left: 100%;
+  }
+  
+  /* Dashboard Content */
+  .main-content {
+    margin-left: 280px;
+    padding: 3rem;
+  }
+  
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .stat-card {
+    background: linear-gradient(135deg, var(--glass), rgba(99, 102, 241, 0.05));
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  
+  .stat-card:hover::after {
+    animation: shine 1.5s;
+  }
+  
+  @keyframes shine {
+    0% { transform: rotate(45deg) translate(-50%, -50%); }
+    100% { transform: rotate(45deg) translate(150%, 150%); }
+  }
+  
+  .stat-card i {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+  
+  .stat-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  
+  .stat-card p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  
+  /* Modern Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .sidebar {
+      width: 100%;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    
+    .main-content {
+      margin-left: 0;
+      padding: 2rem;
+    }
+    
+    .dashboard-stats {
+      grid-template-columns: 1fr;
+    }
+  }
