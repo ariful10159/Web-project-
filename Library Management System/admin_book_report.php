@@ -1,90 +1,115 @@
 <?php
 session_start();
+require 'database.php';
 
-// Admin লগইন চেক
-if (!isset($_SESSION['admin_logged_in'])) {
-    header("Location: admin_login.php");
+// Admin authentication check
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'admin') {
+    header("Location: signin.php");
     exit();
 }
 
-// 2nd Code-এর মতো ডাটাবেস কানেকশন
-include 'database.php';
-
-// রিপোর্ট ফেচ
-$sql = "SELECT * FROM book_report ORDER BY report_date DESC";
-$result = $conn->query($sql); // Object-Oriented Style
-
-if (!$result) {
-    die("Query error: " . $conn->error);
+// Fetch reports from database
+$reports = [];
+$error = '';
+try {
+    $stmt = $conn->prepare("
+        SELECT br.*, u.username, u.email 
+        FROM book_report br
+        JOIN users u ON br.user_id = u.id
+        ORDER BY br.report_date DESC
+    ");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $reports = $result->fetch_all(MYSQLI_ASSOC);
+} catch(Exception $e) {
+    $error = "Error fetching reports: " . $e->getMessage();
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin - Book Reports</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reports Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* CSS স্টাইল পূর্বের মতো */
-    </style>
+    <link rel="stylesheet" href="admin_book_report.css">
 </head>
 <body>
-    <?php include('admin_sidebar.php'); ?>
+    <?php include 'admin_sidebar.php'; ?>
     
     <div class="admin-container">
-        <h1>Book Reports Management 
-            <a href="logout.php" style="float:right; color:#e74c3c; text-decoration:none;">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </h1>
+        <div class="header">
+            <h1>Book Reports Management</h1>
+        </div>
 
-        <table class="report-table">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Book Details</th>
-                    <th>Issue Description</th>
-                    <th>Date Reported</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if($result->num_rows > 0): ?>
-                    <?php while($row = $result->fetch_assoc()): ?>
+        <?php if($error): ?>
+            <div class="alert error">
+                <i class="fas fa-exclamation-circle"></i> <?= $error ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="report-section">
+            <div class="table-container">
+                <table class="report-table">
+                    <thead>
                         <tr>
-                            <td>
-                                <?php echo htmlspecialchars($row['user_name']); ?><br>
-                                <small><?php echo htmlspecialchars($row['gmail']); ?></small>
-                            </td>
-                            <td>
-                                <strong><?php echo htmlspecialchars($row['book_name']); ?></strong><br>
-                                <em><?php echo htmlspecialchars($row['author']); ?></em>
-                            </td>
-                            <td><?php echo nl2br(htmlspecialchars($row['description'])); ?></td>
-                            <td><?php echo $row['report_date']; ?></td>
-                            <td class="status-<?php echo strtolower($row['status']); ?>">
-                                <?php echo $row['status']; ?>
-                            </td>
-                            <td>
-                                <a href="edit_report.php?id=<?php echo $row['id']; ?>" class="edit-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <a href="delete_report.php?id=<?php echo $row['id']; ?>" class="delete-btn">
-                                    <i class="fas fa-trash"></i> Delete
-                                </a>
-                            </td>
+                            <th>User</th>
+                            <th>Book Details</th>
+                            <th>Issue Description</th>
+                            <th>Date Reported</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="6">No reports found in database</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        <?php if(count($reports) > 0): ?>
+                            <?php foreach($reports as $report): ?>
+                                <tr>
+                                    <td>
+                                        <div class="user-info">
+                                            <strong><?= htmlspecialchars($report['username']) ?></strong>
+                                            <small><?= htmlspecialchars($report['email']) ?></small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="book-info">
+                                            <strong><?= htmlspecialchars($report['book_name']) ?></strong>
+                                            <em><?= htmlspecialchars($report['author']) ?></em>
+                                        </div>
+                                    </td>
+                                    <td><?= nl2br(htmlspecialchars($report['description'])) ?></td>
+                                    <td><?= date('M j, Y h:i A', strtotime($report['report_date'])) ?></td>
+                                    <td>
+                                        <span class="status-badge <?= strtolower($report['status']) ?>">
+                                            <?= $report['status'] ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="edit_report.php?id=<?= $report['id'] ?>" class="btn edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form action="delete_report.php" method="POST">
+                                                <input type="hidden" name="report_id" value="<?= $report['id'] ?>">
+                                                <button type="submit" class="btn delete" 
+                                                    onclick="return confirm('Are you sure?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="no-data">No reports found</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-
-    <?php $conn->close(); ?>
 </body>
 </html>
