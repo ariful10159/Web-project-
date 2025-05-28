@@ -1,0 +1,160 @@
+/* add_book.css */
+
+/* Form Container */
+.add-book-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Form Title */
+.add-book-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #6366f1;
+    font-size: 1.8rem;
+}
+
+/* Input Groups */
+.add-book-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.add-book-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #f1f5f9;
+    font-weight: 500;
+}
+
+.add-book-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.add-book-input:focus {
+    border-color: #6366f1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Required Star */
+.required-star {
+    color: #ef4444;
+    margin-left: 3px;
+}
+
+/* Submit Button */
+.add-book-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.add-book-submit:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+/* Alert Messages */
+.add-book-alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.add-book-alert.success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+
+.add-book-alert.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-book-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .add-book-title {
+        font-size: 1.5rem;
+    }
+}
+/* File Upload Styles */
+.file-upload-wrapper {
+    position: relative;
+    margin-top: 0.5rem;
+}
+
+.file-note {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin-left: 0.5rem;
+}
+
+.preview-area {
+    margin-top: 1rem;
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-area img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    padding: 0.5rem 1rem;
+    background: #6366f1;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: #4f46e5;
+}
