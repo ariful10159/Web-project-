@@ -1,0 +1,168 @@
+/* Base Styles */
+.admin-container {
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.alert.error {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+}
+
+/* Report Section */
+.report-section {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.report-table th,
+.report-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.report-table th {
+    background: #f8fafc;
+    color: #4a5568;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+}
+
+.user-info strong {
+    display: block;
+    color: #2d3748;
+}
+
+.user-info small {
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+.book-info strong {
+    display: block;
+    color: #2d3748;
+}
+
+.book-info em {
+    color: #718096;
+    font-size: 0.875rem;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.status-badge.resolved {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.status-badge.processing {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn.edit {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.btn.edit:hover {
+    background: #bfdbfe;
+}
+
+.btn.delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.btn.delete:hover {
+    background: #fecaca;
+}
+
+.no-data {
+    text-align: center;
+    color: #718096;
+    padding: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-container {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .report-table {
+        min-width: 800px;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+}
