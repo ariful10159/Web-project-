@@ -1,0 +1,129 @@
+/* add_student.css */
+
+/* Form Container */
+.add-student-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Title */
+.add-student-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #6366f1;
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 0.6rem;
+}
+
+.add-student-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 3px;
+    background: #6366f1;
+}
+
+/* Input Groups */
+.add-student-input-group {
+    margin-bottom: 1.5rem;
+}
+
+.add-student-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: #f1f5f9;
+    font-weight: 500;
+}
+
+.add-student-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.add-student-input:focus {
+    border-color: #6366f1;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Password Toggle Icon */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(255,255,255,0.5);
+}
+
+.password-toggle:hover {
+    color: #6366f1;
+}
+
+/* Submit Button */
+.add-student-submit {
+    width: 100%;
+    padding: 1rem;
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.add-student-submit:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+}
+
+/* Alert Messages */
+.add-student-alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.add-student-alert.success {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10b981;
+    color: #10b981;
+}
+
+.add-student-alert.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .add-student-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .add-student-title {
+        font-size: 1.5rem;
+    }
+}
