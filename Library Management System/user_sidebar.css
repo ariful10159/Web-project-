@@ -1,0 +1,59 @@
+/* 24) user_sidebar.css */
+.user-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar-header h2 {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav a {
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+    background: #34495e;
+    color: white;
+}
+
+.sidebar-nav a.active {
+    background: #3498db;
+    color: white;
+}
+
+.sidebar-nav a i {
+    width: 25px;
+    text-align: center;
+}
