@@ -1,0 +1,113 @@
+/* student_list.css */
+
+.user-list-section {
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.section-title {
+    color: #6366f1;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+}
+
+.user-table-container {
+    overflow-x: auto;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.user-table th,
+.user-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-table th {
+    background: rgba(99, 102, 241, 0.15);
+    color: #6366f1;
+    font-weight: 600;
+}
+
+.user-type {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.user-type.admin {
+    background: rgba(99, 102, 241, 0.2);
+    color: #6366f1;
+}
+
+.user-type.student {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: rgba(99, 102, 241, 0.2);
+    color: #6366f1;
+    margin-right: 0.5rem;
+}
+
+.btn-edit:hover {
+    background: #6366f1;
+    color: white;
+}
+
+.btn-delete {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.btn-delete:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.no-data {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    padding: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-list-section {
+        padding: 1.5rem;
+    }
+    
+    .user-table th,
+    .user-table td {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn-edit,
+    .btn-delete {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+    }
+}
