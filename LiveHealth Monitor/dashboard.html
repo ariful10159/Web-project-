@@ -1,1 +1,654 @@
-LiveHealth Monitor
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Health Monitoring System</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard_style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>MediGuard</span>
+        </div>
+        <div class="navbar-links">
+            <a href="dashboard.html" class="nav-link active">
+                <i class="fas fa-home"></i> Home
+            </a>
+
+            <!-- New Prediction Button -->
+            <a href="prediction.html" class="nav-link">
+                <i class="fas fa-robot"></i> Prediction
+            </a>
+
+            <a href="sensor_data_entry.php" class="nav-link">
+                <i class="fas fa-home"></i> Manually add
+            </a>
+            <a href="patient_details.php" class="nav-link">
+                <i class="fas fa-user"></i> Patient Details
+            </a>
+            <a href="insert_patient.php" class="nav-link">
+                <i class="fas fa-plus"></i> Add Patient details
+            </a>
+            <a href="export_csv.php" class="nav-link" id="export-csv">
+                <i class="fas fa-file-export"></i> Export CSV
+            </a>
+        </div>
+    </nav>
+
+
+    <div class="dashboard-container">
+        <section class="sensor-cards">
+
+
+            <!-- Heart Rate -->
+            <div class="card">
+                <div class="card-icon bpm">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">Heart Rate</span>
+                    <span class="card-value" id="last-bpm">-- BPM</span>
+                </div>
+            </div>
+            <!-- SpO2 (New Card) -->
+            <div class="card">
+                <div class="card-icon spo2">
+                    <i class="fas fa-tint"></i> <!-- You can also use fa-lungs or fa-heart -->
+                </div>
+                <div class="card-content">
+                    <span class="card-label">SpO₂</span>
+                    <span class="card-value" id="last-spo2">-- %</span>
+                    <div class="card-description" id="spo2-description">Oxygen Saturation Level</div>
+                </div>
+            </div>
+
+            <!-- ECG Value -->
+            <div class="card">
+                <div class="card-icon ecg">
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">ECG Value</span>
+                    <span class="card-value" id="last-ecg">--</span>
+                </div>
+            </div>
+
+            <!-- GSR Value -->
+            <div class="card">
+                <div class="card-icon gsr">
+                    <i class="fas fa-hand-paper"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">GSR Value</span>
+                    <span class="card-value" id="last-gsr">--</span>
+                </div>
+            </div>
+
+            <!-- Body Temperature -->
+            <div class="card">
+                <div class="card-icon ds18">
+                    <i class="fas fa-thermometer-quarter"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">Body Temp</span>
+                    <span class="card-value" id="last-ds18">-- °C</span>
+                </div>
+            </div>
+
+            <!-- Blood Glucose -->
+            <div class="card">
+                <div class="card-icon glucose">
+                    <i class="fas fa-vial"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">Blood Glucose</span>
+                    <span class="card-value" id="last-glucose">-- mg/dL</span>
+                </div>
+            </div>
+
+            <!-- BMI (New Card) -->
+            <div class="card">
+                <div class="card-icon bmi">
+                    <i class="fas fa-weight"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">BMI</span>
+                    <span class="card-value" id="last-bmi">--</span>
+                    <div class="card-description" id="bmi-category">--</div>
+                </div>
+            </div>
+
+            <!-- BMR (New Card) -->
+            <div class="card">
+                <div class="card-icon bmr">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">BMR</span>
+                    <span class="card-value" id="last-bmr">-- kcal</span>
+                    <div class="card-description" id="bmr-description">Basal Metabolic Rate</div>
+                </div>
+            </div>
+
+
+            <!-- Humidity -->
+            <div class="card">
+                <div class="card-icon hum">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">Humidity</span>
+                    <span class="card-value" id="last-hum">-- %</span>
+                </div>
+            </div>
+
+
+
+
+            <!-- Last Updated -->
+            <div class="card">
+                <div class="card-icon time">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="card-content">
+                    <span class="card-label">Last Updated</span>
+                    <span class="card-value" id="last-updated">--</span>
+                </div>
+            </div>
+        </section>
+        <section class="bmi-decision-box">
+            <h2 class="health-status-title">Smart Health Suggestions</h2>
+
+            <div class="card">
+                <div class="card-content">
+
+                    <!-- Wrapper for BMI, BMR, GSR, and DS18 side by side -->
+                    <div class="bmi-bmr-wrapper">
+
+
+                        <!-- BMI Section -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="card-icon">
+                                <i class="fas fa-weight" style="font-size: 24px; color: #a15151;"></i>
+                            </div>
+                            <span class="card-label">BMI</span>
+                            <span class="card-value" id="bmi-value">Calculating...</span>
+                            <div id="bmi-suggestion" style="margin-top: 10px; font-size: 14px; color: #333;"></div>
+                        </div>
+
+                        <!-- BMR Section -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="card-icon">
+                                <i class="fas fa-fire" style="font-size: 24px; color: #e25822;"></i>
+                            </div>
+                            <span class="card-label">BMR</span>
+                            <span class="card-value" id="bmr-value">Calculating...</span>
+                            <div id="bmr-suggestion" style="margin-top: 10px; font-size: 14px; color: #333;"></div>
+                        </div>
+
+                        <!-- GSR Section -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="card-icon">
+                                <i class="fas fa-hand-paper" style="font-size: 24px; color: #007bff;"></i>
+                            </div>
+                            <span class="card-label">GSR</span>
+                            <span class="card-value" id="gsr-value">Loading...</span>
+                            <div id="gsr-suggestion" style="margin-top: 10px; font-size: 14px; color: #333;"></div>
+                        </div>
+
+                        <!-- DS18B20 Temperature Section -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <div class="card-icon">
+                                <i class="fas fa-thermometer-half" style="font-size: 24px; color: #ff5722;"></i>
+                            </div>
+                            <span class="card-label">Body Temp</span>
+                            <span class="card-value" id="ds18b20-value">Loading...</span>
+                            <div id="ds18b20-suggestion" style="margin-top: 10px; font-size: 14px; color: #333;"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+    </div>
+
+
+    <section class="chart-section">
+        <div class="chart-row-full">
+            <div class="chart-container">
+                <h3><i class="fas fa-wave-square"></i> ECG Readings</h3>
+                <canvas id="ecgChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fas fa-hand-paper"></i> GSR Readings</h3>
+                <canvas id="gsrChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-row">
+            <div class="chart-container">
+                <h3><i class="fas fa-weight"></i>Body Mass Index</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fa-dna"></i> Basal Metabolic Rate</h3>
+                <canvas id="humChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-row">
+            <div class="chart-container">
+                <h3><i class="fas fa-thermometer-quarter"></i> DS18 Temperature (°C)</h3>
+                <canvas id="ds18Chart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3><i class="fas fa-heartbeat"></i> Heart Rate (BPM)</h3>
+                <canvas id="bpmChart"></canvas>
+            </div>
+        </div>
+
+
+    </section>
+    </div>
+
+
+    <script>
+        function fetchBloodPressure() {
+            fetch('blood_pressure.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('last-bp').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching blood pressure:', error);
+                    document.getElementById('last-bp').textContent = '--';
+                });
+        }
+
+        // Fetch immediately on load
+        fetchBloodPressure();
+
+        // Optionally update every 10 seconds
+        setInterval(fetchBloodPressure, 10000);
+    </script>
+    <script>
+        function fetchSpO2() {
+            fetch('last_one.php')
+                .then(response => response.json())
+                .then(data => {
+                    const spo2Value = data.sensor_data[0].spo2;
+                    document.getElementById('last-spo2').textContent = spo2Value ? spo2Value + " %" : "-- %";
+                })
+                .catch(error => {
+                    console.error('Error fetching SpO2:', error);
+                    document.getElementById('last-spo2').textContent = "-- %";
+                });
+        }
+
+        // Run once on load
+        fetchSpO2();
+
+        // Optional: auto refresh every 10 seconds
+        setInterval(fetchSpO2, 10000);
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("get_last_weight.php")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    }
+
+                    // BMI & BMR মান সেট করা
+                    document.getElementById("last-bmi").textContent = data.bmi ? data.bmi : "--";
+                    document.getElementById("last-bmr").textContent = data.bmr ? data.bmr + " kcal" : "-- kcal";
+
+                    // BMI ক্যাটাগরি (optional)
+                    let bmiCategory = getBMICategory(data.bmi);
+                    document.getElementById("bmi-category").textContent = bmiCategory;
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+
+            function getBMICategory(bmi) {
+                if (!bmi) return "--";
+                if (bmi < 18.5) return "Underweight";
+                else if (bmi < 24.9) return "Normal weight";
+                else if (bmi < 29.9) return "Overweight";
+                else return "Obese";
+            }
+        });
+    </script>
+
+
+    <script>
+        function fetchGSRAndTemp() {
+            fetch('last_one.php')
+                .then(response => response.json())
+                .then(data => {
+                    const latestData = data.sensor_data[0];
+
+                    // GSR Value & Decision
+                    const gsrValue = latestData.gsr;
+                    document.getElementById("gsr-value").innerText = gsrValue + " ";
+
+                    let gsrSuggestion = "";
+                    if (gsrValue >= 200 && gsrValue <= 400) {
+                        gsrSuggestion = " আপনি শান্ত অবস্থায় আছেন — আরামদায়ক পরিবেশ বজায় রাখুন।";
+                    } else if (gsrValue > 400 && gsrValue <= 600) {
+                        gsrSuggestion = " স্বাভাবিক মানসিক অবস্থা — ভালো আছেন।";
+                    } else if (gsrValue > 600 && gsrValue <= 800) {
+                        gsrSuggestion = " আপনি স্ট্রেসে বা উত্তেজনায় আছেন — বিশ্রাম নিন, গভীর শ্বাস নিন।";
+                    } else {
+                        gsrSuggestion = " অস্বাভাবিক GSR রিডিং — ডিভাইসটি ঠিকমতো সংযুক্ত কিনা যাচাই করুন।";
+                    }
+                    document.getElementById("gsr-suggestion").innerText = gsrSuggestion;
+
+                    // DS18B20 Temperature & Decision
+                    const tempValue = parseFloat(latestData.ds18);
+                    document.getElementById("ds18b20-value").innerText = tempValue + " °C";
+
+                    let tempStatus = "";
+                    if (tempValue >= 36.5 && tempValue <= 37.5) {
+                        tempStatus = " স্বাভাবিক শরীরের তাপমাত্রা — চিন্তার কিছু নেই।";
+                    } else if (tempValue > 37.5 && tempValue <= 38.5) {
+                        tempStatus = " হালকা জ্বর — বিশ্রাম নিন ও পর্যাপ্ত পানি পান করুন।";
+                    } else if (tempValue > 38.5 && tempValue <= 39.4) {
+                        tempStatus = " মাঝারি জ্বর — প্যারাসিটামল খেতে পারেন ও বিশ্রাম নিন।";
+                    } else if (tempValue >= 39.5) {
+                        tempStatus = " উচ্চ জ্বর — দয়া করে দ্রুত ডাক্তারের পরামর্শ নিন।";
+                    } else if (tempValue >= 35 && tempValue < 36.5) {
+                        tempStatus = " শরীরের তাপমাত্রা কিছুটা কম — গরম কাপড় পরুন ও শরীর ঢেকে রাখুন।";
+                    } else if (tempValue < 35) {
+                        tempStatus = " হাইপোথার্মিয়ার ঝুঁকি — দ্রুত গরম পরিবেশে যান ও চিকিৎসা নিন।";
+                    } else {
+                        tempStatus = " অস্বাভাবিক রিডিং — আবার পরিমাপ করুন বা ডিভাইস চেক করুন।";
+                    }
+
+                    document.getElementById("ds18b20-suggestion").innerText = tempStatus;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById("gsr-value").innerText = "Error";
+                    document.getElementById("ds18b20-value").innerText = "Error";
+                    document.getElementById("gsr-suggestion").innerText = "";
+                    document.getElementById("ds18b20-suggestion").innerText = "";
+                });
+        }
+
+        window.onload = fetchGSRAndTemp;
+        setInterval(fetchGSRAndTemp, 10000);
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('get_last_weight.php')
+                .then(res => res.json())
+                .then(data => {
+                    const weight = parseFloat(data.weight);
+                    const heightCm = parseFloat(data.height);
+                    const heightM = heightCm / 100;
+                    const age = parseInt(data.age);
+                    const gender = data.gender.toLowerCase();
+                    const bmr = parseFloat(data.bmr);
+
+                    // Calculate BMI
+                    const bmi = weight / (heightM * heightM);
+                    const bmiValue = bmi.toFixed(2);
+
+                    // Show BMI value
+                    document.getElementById('bmi-value').textContent = bmiValue;
+
+                    // BMI Suggestion
+                    let bmiSuggestion = '';
+                    if (bmi < 18.5) {
+                        bmiSuggestion = 'আপনার ওজন স্বাভাবিকের চেয়ে কম। পুষ্টিকর খাবার খান এবং ডাক্তারের পরামর্শ নিন।';
+                    } else if (bmi >= 18.5 && bmi <= 24.9) {
+                        bmiSuggestion = 'আপনার ওজন স্বাভাবিক। স্বাস্থ্যকর খাবার ও ব্যায়াম চালিয়ে যান।';
+                    } else if (bmi >= 25 && bmi <= 29.9) {
+                        bmiSuggestion = 'আপনার ওজন স্বাভাবিকের চেয়ে বেশি। নিয়মিত ব্যায়াম করুন এবং খাদ্য নিয়ন্ত্রণে রাখুন।';
+                    } else if (bmi >= 30 && bmi <= 34.9) {
+                        bmiSuggestion = 'আপনি স্থূলতায় ভুগছেন। স্বাস্থ্য পরীক্ষা করুন এবং ডাক্তারের পরামর্শ নিন।';
+                    } else if (bmi >= 35 && bmi <= 39.9) {
+                        bmiSuggestion = 'আপনার স্থূলতা মারাত্মক। কঠোর ডায়েট ও ব্যায়ামের প্রয়োজন।';
+                    } else {
+                        bmiSuggestion = 'স্বাস্থ্য ঝুঁকি খুবই বেশি। অবিলম্বে চিকিৎসকের পরামর্শ নিন।';
+                    }
+
+                    // Show BMI Suggestion
+                    document.getElementById('bmi-suggestion').textContent = bmiSuggestion;
+
+                    // Show BMR Value
+                    document.getElementById('bmr-value').textContent = bmr.toFixed(2);
+
+                    // BMR Suggestion
+                    let bmrSuggestion = '';
+                    if (bmr < 1200) {
+                        bmrSuggestion = 'আপনার BMR কম। খাদ্যাভ্যাস বাড়াতে এবং শক্তি বৃদ্ধির জন্য একজন ডায়েটিশিয়ানের পরামর্শ নিন।';
+                    } else if (bmr >= 1200 && bmr <= 1800) {
+                        bmrSuggestion = 'আপনার BMR গড় পর্যায়ে। নিয়মিত স্বাস্থ্যকর খাবার ও হালকা ব্যায়াম বজায় রাখুন।';
+                    } else if (bmr > 1800) {
+                        bmrSuggestion = 'আপনার BMR বেশি। অতিরিক্ত শক্তি খরচ হচ্ছে, খাদ্য ও বিশ্রামে ভারসাম্য রক্ষা করুন।';
+                    } else {
+                        bmrSuggestion = 'BMR তথ্য অপ্রাপ্য।';
+                    }
+
+                    // Show BMR Suggestion
+                    document.getElementById('bmr-suggestion').textContent = bmrSuggestion;
+                })
+                .catch(error => {
+                    console.error('BMI/BMR fetch error:', error);
+                    document.getElementById('bmi-value').textContent = '--';
+                    document.getElementById('bmi-suggestion').textContent = 'তথ্য লোড করা যায়নি';
+                    document.getElementById('bmr-value').textContent = '--';
+                    document.getElementById('bmr-suggestion').textContent = 'তথ্য লোড করা যায়নি';
+                });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch latest reading
+            fetch('last_one.php')
+                .then(res => res.json())
+                .then(lastData => {
+                    const latestReading = lastData.sensor_data[0];
+
+                    document.getElementById('last-hum').textContent = latestReading.hum + ' %';
+                    document.getElementById('last-ds18').textContent = latestReading.ds18 + ' °C';
+                    document.getElementById('last-bpm').textContent = latestReading.bpm + ' BPM';
+                    document.getElementById('last-ecg').textContent = latestReading.ecg;
+                    document.getElementById('last-gsr').textContent = latestReading.gsr || '--';
+                    document.getElementById('last-glucose').textContent = latestReading.blood_glucose || 'mg/dL';
+
+                    document.getElementById('last-updated').textContent = new Date(latestReading.recorded_at).toLocaleString();
+                })
+                .catch(error => {
+                    console.error('Error fetching last reading:', error);
+                    document.getElementById('last-updated').textContent = "Error loading data";
+                });
+
+            // Fetch main chart data (8 readings) and ECG values
+            fetch('display_last_reading.php')
+                .then(res => res.json())
+                .then(data => {
+                    // Process the 8 readings for other charts including GSR
+                    const labels = data.sensor_data.map((d, i) => `Reading ${i + 1}`);
+                    const tempData = data.sensor_data.map(d => parseFloat(d.temp) || 0);
+                    const humData = data.sensor_data.map(d => parseFloat(d.hum) || 0);
+                    const ds18Data = data.sensor_data.map(d => parseFloat(d.ds18) || 0);
+                    const bpmData = data.sensor_data.map(d => parseFloat(d.bpm) || 0);
+                    const gsrData = data.sensor_data.map(d => parseFloat(d.gsr) || 0);
+
+                    createBarChart('tempChart', 'BMI(kg/m²)', labels, tempData, '#e74c3c', 15, 40);
+                    createBarChart('humChart', 'BMR(Unit)', labels, humData, '#3498db', 1200, 2300);
+                    createBarChart('ds18Chart', 'DS18 Temp', labels, ds18Data, '#e67e22', 25, 43);
+                    createBarChart('bpmChart', 'Heart Rate', labels, bpmData, '#e84393', 40, 100);
+                    createLineChart('gsrChart', 'GSR', labels, gsrData, '#2ecc71', 200, 800);
+
+                    // Process the 50 ECG values
+                    const ecgLabels = Array.from({ length: 100 }, (_, i) => i + 1);
+                    const ecgData = data.ecg_values.slice(0, 100);
+                    createECGChart('ecgChart', 'ECG', ecgLabels, ecgData, '#9b59b6', 0.01, 0.08);
+                })
+                .catch(error => {
+                    console.error('Error fetching chart data:', error);
+                });
+
+            function createBarChart(id, label, labels, data, color, minY, maxY) {
+                const ctx = document.getElementById(id).getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            backgroundColor: color + '80',
+                            borderColor: color,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: getChartOptions(label, false, minY, maxY)
+                });
+            }
+
+            function createLineChart(id, label, labels, data, color, minY, maxY) {
+                const ctx = document.getElementById(id).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            borderColor: color,
+                            backgroundColor: color + '20',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            fill: true
+                        }]
+                    },
+                    options: getChartOptions(label, true, minY, maxY)
+                });
+            }
+
+            function createECGChart(id, label, labels, data, color, minY, maxY) {
+                const ctx = document.getElementById(id).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: data,
+                            borderColor: color,
+                            backgroundColor: 'transparent',
+                            borderWidth: 1,
+                            pointRadius: 0,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: label,
+                                font: { size: 16 }
+                            },
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                min: minY,
+                                max: maxY,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: {
+                                    autoSkip: true,
+                                    maxTicksLimit: 10,
+                                    callback: function (value) {
+                                        return (value % 5 === 0) ? value : '';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function getChartOptions(title, isMultiLine = false, minY = null, maxY = null) {
+                const baseOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: title,
+                            font: { size: 16 }
+                        },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            min: minY,
+                            max: maxY
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                autoSkip: isMultiLine,
+                                maxTicksLimit: isMultiLine ? 10 : 8
+                            }
+                        }
+                    }
+                };
+                return baseOptions;
+            }
+
+            // Export CSV functionality
+            document.getElementById('export-csv').addEventListener('click', function () {
+                fetch('export_csv.php')
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'health_data_export.csv';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    })
+                    .catch(error => {
+                        console.error('Error exporting CSV:', error);
+                        alert('Error exporting data. Please try again.');
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>
