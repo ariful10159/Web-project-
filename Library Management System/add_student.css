@@ -2,7 +2,7 @@
 
 /* Form Container */
 .add-student-container {
-    max-width: 600px;
+    max-width: 100px;
     margin: 2rem auto;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.05);
